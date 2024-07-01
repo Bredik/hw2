@@ -9,8 +9,9 @@ import static java.util.Arrays.asList;
 @Log4j2
 public class Main {
     public static void main(String[] args) {
+        System.out.println("гоу!");
         List<Block> initialBlocks = new ArrayList<>();
-        for (int i = 0; i < 10_000; i++) {
+        for (int i = 0; i < 10; i++) { //todo было 10_000
             initialBlocks.add(new Block());
         }
 
@@ -23,8 +24,8 @@ public class Main {
 
         List<Truck> trucks = new ArrayList<>();
 
-        for (int i = 0; i < 10; i++) {
-            trucks.add(new Truck("Truck " + i, 1000, route));
+        for (int i = 0; i < 1; i++) { //todo было 10
+            trucks.add(new Truck("Грузовик " + i, 1000, route));
         }
 
         trucks.forEach(Thread::start); //запускаем потоки грузовиков
@@ -51,7 +52,5 @@ public class Main {
         } else {
             log.error("Error in delivery");
         }
-
-
     }
 }

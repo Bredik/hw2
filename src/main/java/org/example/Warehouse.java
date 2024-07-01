@@ -49,7 +49,7 @@ public class Warehouse extends Thread {
     }
 
     private void loadTruck(Truck truck) {
-        log.info("Loading truck {}", truck.getName());
+        log.info("Грузим в грузовик {}", truck.getName());
         Collection<Block> blocksToLoad = getFreeBlocks(truck.getCapacity());
         try {
             sleep(10L * blocksToLoad.size());
@@ -57,7 +57,7 @@ public class Warehouse extends Thread {
             log.error("Interrupted while loading truck", e);
         }
         truck.getBlocks().addAll(blocksToLoad);
-        log.info("Truck loaded {}", truck.getName());
+        log.info("Грузовик загружен {}", truck.getName());
     }
 
     private Collection<Block> getFreeBlocks(int maxItems) {
@@ -75,7 +75,7 @@ public class Warehouse extends Thread {
     }
 
     private void unloadTruck(Truck truck) {
-        log.info("Unloading truck {}", truck.getName());
+        log.info("Разгружаем грузовик {}", truck.getName());
         List<Block> arrivedBlocks = truck.getBlocks();
         try {
             sleep(100L * arrivedBlocks.size());
@@ -84,7 +84,7 @@ public class Warehouse extends Thread {
         }
         returnBlocksToStorage(arrivedBlocks);
         truck.getBlocks().clear();
-        log.info("Truck unloaded {}", truck.getName());
+        log.info("Разгрузка завершена {}", truck.getName());
     }
 
     private Truck getNextArrivedTruck() {

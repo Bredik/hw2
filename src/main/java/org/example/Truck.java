@@ -20,7 +20,6 @@ public class Truck extends Thread {
 
     private final long travelTime = Math.round(Math.random() * 2000);
 
-
     public Truck(String name, int capacity, List<Warehouse> route) {
         super(name);
         this.capacity = capacity;
@@ -35,22 +34,22 @@ public class Truck extends Thread {
      */
     @Override
     public void run() {
-        log.info("Truck started");
+        log.info("Грузовк start");
         while (!routeList.isEmpty()) {
             Warehouse warehouse = routeList.poll();
             travel(warehouse);
             warehouse.arrive(this);
         }
-        log.info("Truck finished");
+        log.info("Грузовк finished");
     }
 
     private void travel(Warehouse warehouse) {
-        log.info("Traveling to warehouse: {}", warehouse.getName());
+        log.info("Едем до склада: {}", warehouse.getName());
         try {
             Thread.sleep(travelTime);
         } catch (InterruptedException e) {
             log.error(e);
         }
-        log.info("Arrived to warehouse: {}", warehouse.getName());
+        log.info("Прибыли на склад: {}", warehouse.getName());
     }
 }
