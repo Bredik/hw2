@@ -8,7 +8,6 @@ import java.util.*;
 @Log4j2
 @Getter
 public class Warehouse extends Thread {
-
     private final List<Block> storage = new ArrayList<>();
     private final Queue<Truck> trucks = new ArrayDeque<>();
 
@@ -46,6 +45,15 @@ public class Warehouse extends Thread {
     }
 
     private void loadTruck(Truck truck) {
+        if (storage.isEmpty()) { //если на складе нет блоков уже
+            if (!truck.getRouteList().isEmpty()) { //но в маршрутном листе грузовика есть поинт склада
+               truck.getRouteList().poll(); //тогда удаляем склад из маршрутного листа
+               synchronized (truck) {
+                   truck.notifyAll(); //и отпускаем грузовик
+               }
+            }
+            return;
+        }
         Collection<Block> blocksToLoad = getFreeBlocks(truck.getCapacity());
         log.info("Грузим в грузовик {}, {} блоков, со склада {}", truck.getName(), blocksToLoad.size(), this.getName());
         try {
@@ -57,6 +65,11 @@ public class Warehouse extends Thread {
             return;
         }
         truck.getBlocks().addAll(blocksToLoad);
+
+        if (!storage.isEmpty()) {
+            truck.getRouteList().add(this); // если на складе еще остались блоки, то надо сюда вернуться
+        }
+
         log.info("Грузовик {} загружен. Кол-во блоков {}", truck.getName(), blocksToLoad.size());
         synchronized (truck) {
             truck.notifyAll(); //отпускаем грузовик когда его загрузили
@@ -91,6 +104,11 @@ public class Warehouse extends Thread {
         }
         returnBlocksToStorage(arrivedBlocks);
         truck.getBlocks().clear();
+
+        if (!truck.getRouteList().isEmpty()) {
+            truck.getRouteList().add(this);
+        }
+
         synchronized (truck) {
             truck.notifyAll(); //отпускаем грузовик когда его разгрузили
         }
@@ -101,7 +119,7 @@ public class Warehouse extends Thread {
         return trucks.poll();
         //TODO необходимо реализовать логику по получению следующего прибывшего грузовика внутри потока склада
     }
-    
+
     public void arrive(Truck truck) {
         log.info("Грузовик {}, прибыл на склад {}, на складе {} блоков", truck.getName(), this.getName(), this.storage.size());
         try {

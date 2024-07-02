@@ -15,8 +15,8 @@ public class Truck extends Thread {
     private final int capacity;
 
     private final List<Block> blocks;
-
-    private final Queue<Warehouse> routeList = new LinkedList<>();
+    
+    private Queue<Warehouse> routeList = new LinkedList<>();
 
     private final long travelTime = Math.round(Math.random() * 2000);
 
@@ -36,8 +36,8 @@ public class Truck extends Thread {
     public void run() {
         log.info("Грузовик start");
         while (!routeList.isEmpty()) {
+            log.debug("Маршрутный лист {} грузовика {}", routeList, this.getName());
             Warehouse warehouse = routeList.poll();
-            //log.info("Я {} беру точку {}", this.getName(), warehouse.getName());
             travel(warehouse);
             warehouse.arrive(this);
         }
@@ -53,5 +53,4 @@ public class Truck extends Thread {
         }
         log.info("Прибыли на склад: {}", warehouse.getName());
     }
-
 }

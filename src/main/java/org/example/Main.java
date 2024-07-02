@@ -12,7 +12,7 @@ public class Main {
         long startTime =  System.currentTimeMillis();
         log.info("Начальное время: {}", startTime);
         List<Block> initialBlocks = new ArrayList<>();
-        for (int i = 0; i < 10000; i++) { //todo было 10_000
+        for (int i = 0; i < 10_000; i++) {
             initialBlocks.add(new Block(i));
         }
 
@@ -25,8 +25,8 @@ public class Main {
 
         List<Truck> trucks = new ArrayList<>();
 
-        for (int i = 0; i < 10; i++) { //todo было 10
-            trucks.add(new Truck("имя: " + i, 1000, route)); //capacity 1000
+        for (int i = 0; i < 10; i++) {
+            trucks.add(new Truck("имя: " + i, 1000, route));
         }
 
         trucks.forEach(Thread::start); //запускаем потоки грузовиков
