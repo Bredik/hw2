@@ -31,7 +31,6 @@ public class Warehouse extends Thread {
                     sleep(100);
                 } catch (InterruptedException e) {
                     if (currentThread().isInterrupted()) {
-
                         break;
                     }
                 }
@@ -60,7 +59,7 @@ public class Warehouse extends Thread {
         truck.getBlocks().addAll(blocksToLoad);
         log.info("Грузовик {} загружен. Кол-во блоков {}", truck.getName(), blocksToLoad.size());
         synchronized (truck) {
-            truck.notifyAll();
+            truck.notifyAll(); //отпускаем грузовик когда его загрузили
         }
     }
 
@@ -74,9 +73,11 @@ public class Warehouse extends Thread {
         return blocks;
     }
 
-    private synchronized void returnBlocksToStorage(List<Block> returnedBlocks) {
+    private void returnBlocksToStorage(List<Block> returnedBlocks) {
         log.info("Грузим блоки на склад, выгрузили {} блоков", returnedBlocks.size());
-        storage.addAll(returnedBlocks);
+        synchronized (storage) {
+            storage.addAll(returnedBlocks);
+        }
         //TODO реализовать потокобезопасную логику по возврату блоков на склад
     }
 
@@ -84,33 +85,29 @@ public class Warehouse extends Thread {
         log.info("Разгружаем грузовик {}, у него {} блоков", truck.getName(), truck.getBlocks().size());
         List<Block> arrivedBlocks = truck.getBlocks();
         try {
-            sleep(100L * arrivedBlocks.size());
+            sleep(10L * arrivedBlocks.size());
         } catch (InterruptedException e) {
             log.error("Interrupted while unloading truck", e);
         }
         returnBlocksToStorage(arrivedBlocks);
         truck.getBlocks().clear();
         synchronized (truck) {
-            truck.notifyAll();
+            truck.notifyAll(); //отпускаем грузовик когда его разгрузили
         }
         log.info("Разгрузка грузовика {} завершена, на складе {}, всего {} блоков", truck.getName(), this.getName(), storage.size());
     }
 
     private Truck getNextArrivedTruck() {
-        synchronized (trucks) {
-            return trucks.poll();
-        }
+        return trucks.poll();
         //TODO необходимо реализовать логику по получению следующего прибывшего грузовика внутри потока склада
-        //return null;
     }
-
-
+    
     public void arrive(Truck truck) {
         log.info("Грузовик {}, прибыл на склад {}, на складе {} блоков", truck.getName(), this.getName(), this.storage.size());
         try {
             trucks.add(truck);
             synchronized (truck) {
-                truck.wait();
+                truck.wait(); //когда грузовик прибывает, просим его подождать
             }
         } catch (InterruptedException e) {
             throw new RuntimeException(e);

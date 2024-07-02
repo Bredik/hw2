@@ -9,9 +9,10 @@ import static java.util.Arrays.asList;
 @Log4j2
 public class Main {
     public static void main(String[] args) {
-        System.out.println("гоу!");
+        long startTime =  System.currentTimeMillis();
+        log.info("Начальное время: {}", startTime);
         List<Block> initialBlocks = new ArrayList<>();
-        for (int i = 0; i < 100; i++) { //todo было 10_000
+        for (int i = 0; i < 10000; i++) { //todo было 10_000
             initialBlocks.add(new Block(i));
         }
 
@@ -25,7 +26,7 @@ public class Main {
         List<Truck> trucks = new ArrayList<>();
 
         for (int i = 0; i < 10; i++) { //todo было 10
-            trucks.add(new Truck("имя: " + i, 10, route)); //capacity 1000
+            trucks.add(new Truck("имя: " + i, 1000, route)); //capacity 1000
         }
 
         trucks.forEach(Thread::start); //запускаем потоки грузовиков
@@ -55,5 +56,8 @@ public class Main {
         log.info("Надо было доставить {} блоков, доставлено {}", initialBlocks.size(), deliveredBlocks.size());
 //        log.info("Созданный груз: {}", initialBlocks.toString());
 //        log.info("Доставленный груз: {}", deliveredBlocks.toString());
+        long endTime =  System.currentTimeMillis();
+        log.info("Конечное время:  {}", endTime);
+        log.info("Конечное время:  {}", (endTime - startTime));
     }
 }
