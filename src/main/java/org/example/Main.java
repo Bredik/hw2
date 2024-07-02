@@ -11,8 +11,8 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("гоу!");
         List<Block> initialBlocks = new ArrayList<>();
-        for (int i = 0; i < 10; i++) { //todo было 10_000
-            initialBlocks.add(new Block());
+        for (int i = 0; i < 100; i++) { //todo было 10_000
+            initialBlocks.add(new Block(i));
         }
 
         Warehouse fabric = new Warehouse("Fabric", initialBlocks);
@@ -24,8 +24,8 @@ public class Main {
 
         List<Truck> trucks = new ArrayList<>();
 
-        for (int i = 0; i < 1; i++) { //todo было 10
-            trucks.add(new Truck("Грузовик " + i, 1000, route));
+        for (int i = 0; i < 10; i++) { //todo было 10
+            trucks.add(new Truck("имя: " + i, 10, route)); //capacity 1000
         }
 
         trucks.forEach(Thread::start); //запускаем потоки грузовиков
@@ -52,5 +52,8 @@ public class Main {
         } else {
             log.error("Error in delivery");
         }
+        log.info("Надо было доставить {} блоков, доставлено {}", initialBlocks.size(), deliveredBlocks.size());
+//        log.info("Созданный груз: {}", initialBlocks.toString());
+//        log.info("Доставленный груз: {}", deliveredBlocks.toString());
     }
 }

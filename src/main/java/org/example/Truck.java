@@ -1,6 +1,7 @@
 package org.example;
 
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 
 import java.util.ArrayList;
@@ -11,7 +12,6 @@ import java.util.Queue;
 @Log4j2
 @Getter
 public class Truck extends Thread {
-
     private final int capacity;
 
     private final List<Block> blocks;
@@ -34,9 +34,10 @@ public class Truck extends Thread {
      */
     @Override
     public void run() {
-        log.info("Грузовк start");
+        log.info("Грузовик start");
         while (!routeList.isEmpty()) {
             Warehouse warehouse = routeList.poll();
+            //log.info("Я {} беру точку {}", this.getName(), warehouse.getName());
             travel(warehouse);
             warehouse.arrive(this);
         }
@@ -52,4 +53,5 @@ public class Truck extends Thread {
         }
         log.info("Прибыли на склад: {}", warehouse.getName());
     }
+
 }

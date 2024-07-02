@@ -13,6 +13,11 @@ import java.util.UUID;
 public class Block implements Comparable<Block> {
 
     public final String uuid = UUID.randomUUID().toString();
+    private final String name;
+
+    public Block(int i) {
+        this.name = String.valueOf(i);
+    }
 
     @Override
     public int compareTo(Block o) {
